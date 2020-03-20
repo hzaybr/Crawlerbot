@@ -2,10 +2,12 @@ import json
 import re
 import ssl
 import os
+from datetime import datetime
 import sqlite3
+import requests
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
+from linebot.exceptions import InvalidSignatureError, LineBotApiError
 from linebot.models import *
 from gevent.pywsgi import WSGIServer
 from crawler import crawler
@@ -30,9 +32,23 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    Input = event.message.text
+    profile = requests.get('https://api.line.me/v2/bot/profile/' +event.source.user_id,
+                           headers={'Authorization': 'Bearer ' + j['access_token']})
+    print(profile.text)
+    displayName = json.loads(profile.text)['displayName']
+    print(displayName)
+    text = event.message.text
+    print(text)
+    time = datetime.now()
+    print(time)
+    conn = sqlite3.connect('crawler.db')
+    c = conn.cursor()
+    c.execute("insert into row_data (user, message, time) values (?, ?, ?)",
+              (displayName, text, time))
+    conn.commit()
+    conn.close()
     try:
-        url = re.search(r'(https?\:\/\/[\w\.\@\#\%\&\?]*\s?)', Input).group()
+        url = re.search(r'(https?\:\/\/[\w\.\@\#\%\&\?\=\/]*\s?)', text).group()
         title, content,  keywords = crawler(url.strip(), toFile=False)
         message = TextSendMessage(text=title+'\n---\n'+content+ '\n---\n'+' '.join([keyword for keyword in keywords]))
         line_bot_api.reply_message(event.reply_token, message)
@@ -46,5 +62,7 @@ def handle_message(event):
         pass
 
 if __name__ == "__main__":
-    http_server = WSGIServer(('merry.ee.ncku.edu.tw', 1095), app, keyfile='../ssl/private.key', certfile='../ssl/certificate.crt', ca_certs='../ssl/ca_bundle.crt')
+    port = 1095
+    http_server = WSGIServer(('merry.ee.ncku.edu.tw', port), app, keyfile='../../ssl/private.key', certfile='../../ssl/certificate.crt', ca_certs='../../ssl/ca_bundle.crt')
+    print(f"listen on port {port}")
     http_server.serve_forever()
