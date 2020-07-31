@@ -2,3 +2,9 @@ venv/
 __pycache__
 crawler.db
 config.json
+ssl
+Iconfig.json
+simhei.ttf
+statisticsimage.png
+test.py
+template.md
