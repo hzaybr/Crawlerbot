@@ -41,19 +41,18 @@ def bpitt():
     time = datetime.now()
     print(f"{displayName}\n{text}\n{time}")
 
-    if userId == 'U9bd1b68375536412af172f6353571b1c':
-        if text == 'image':
-            conn = sqlite3.connect('crawler.db')
-            cursor = conn.cursor()
-            imagelink, deletehash = gen_plot(cursor)
-            print(imagelink)
-            replytype = 'image'
-            replymessage = imagelink
-        else:
-            replytype = 'text'
-            replymessage = '!!'
+    if text == 'image':
+        conn = sqlite3.connect('crawler.db')
+        cursor = conn.cursor()
+        imagelink, deletehash = gen_plot(cursor)
+        print(imagelink)
+        replytype = 'image'
+        replymessage = imagelink
+    else:
+        replytype = 'text'
+        replymessage = '!!'
         replytoken = event['replyToken']
-        r = requests.get(f"https://bpitt.herokuapp.com/reply?replytype={replytype}&replymessage={replymessage}&replytoken={replytoken}")
+    r = requests.get(f"https://bpitt.herokuapp.com/reply?replytype={replytype}&replymessage={replymessage}&replytoken={replytoken}")
 
     to_database(displayName, text, time, groupId)
     return "ok"
