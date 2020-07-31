@@ -1,11 +1,13 @@
 # Crawlerbot
-# Requirement
+## Requirement
 
 - python 3.6+
 
-# Setup
+## Setup
 
 ```
 source venv/bin/activate # activate your virtual environment
-pip install -r requirements.txt # insatll dependencies
+pip install -r requirements.txt # install dependencies
+ipython app.py
+python wakeup.py # wakeup crawlerbot every 30 minutes
 ```
