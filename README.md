@@ -8,6 +8,6 @@
 ```
 source venv/bin/activate # activate your virtual environment
 pip install -r requirements.txt # install dependencies
-ipython app.py
+python app.py
 python wakeup.py # wakeup crawlerbot every 30 minutes
 ```
