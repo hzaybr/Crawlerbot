@@ -51,7 +51,7 @@ def bpitt():
     else:
         replytype = 'text'
         replymessage = '!!'
-        replytoken = event['replyToken']
+    replytoken = event['replyToken']
     r = requests.get(f"https://bpitt.herokuapp.com/reply?replytype={replytype}&replymessage={replymessage}&replytoken={replytoken}")
 
     to_database(displayName, text, time, groupId)
