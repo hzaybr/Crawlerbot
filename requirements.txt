@@ -118,7 +118,7 @@ pymacaroons==0.13.0
 PyNaCl==1.1.2
 pyOpenSSL==17.5.0
 pyparsing==2.4.6
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 pyRFC3339==1.0
 pyserial==3.4
 pytesseract==0.3.4
